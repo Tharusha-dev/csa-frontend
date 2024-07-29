@@ -19,30 +19,34 @@ export default function NewShipment({ accessToken: accesToken, closePopUp }: Pro
 
     async function submitDetails(resName: string, resAddr: string) {
         setLoading(true)
-        console.log(accesToken)
+       
 
+        try {
+            await api.post("/new-shipment", {
 
-
-        await api.post("/new-shipment", {
-
-            "recipient_name": resName,
-            "recipient_address": resAddr,
-        }, 
-
-
-
-        ).then((res) => {
-            setLoading(false)
-            if (res.status === 200) {
-
-                setResponse(res.data.message)
-                console.log(res)
-
+                "recipient_name": resName,
+                "recipient_address": resAddr,
+            }, 
+    
+    
+    
+            ).then((res) => {
+                setLoading(false)
+                if (res.status === 200) {
+    
+                    setResponse(res.data.message)
+                 
+    
+                }
             }
+    
+    
+            )
+        }catch(err){
+            console.log(err)
         }
 
-
-        )
+ 
     }
 
     return (
@@ -70,12 +74,12 @@ export default function NewShipment({ accessToken: accesToken, closePopUp }: Pro
                 <h1 className="heading">
                     Add new courier
                 </h1>
-                <span className="field-name">Rec Name : </span>
+                <span className="field-name">Receiver Name : </span>
                 <input onChange={(e) => {
                     setResName(e.target.value)
                 }} type="text" name="" id="" className="field-input" />
 
-                <span className="field-name">Res addr : </span>
+                <span className="field-name">ReReceivers address : </span>
                 <input onChange={(e) => {
                     setResAddr(e.target.value)
                 }} type="text" name="" id="" className="field-input" />

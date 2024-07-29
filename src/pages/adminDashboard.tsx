@@ -27,10 +27,14 @@ export default function AdminDashboard({ }: Props) {
   const [shipingDetailsOpen, setShippingDetailsOpen] = useState(false)
 
   async function findShipment(trackingCode: string) {
-    const sid = parseInt(trackingCode.split("-")[1])
+ 
 
 
     try {
+      const sid = parseInt(trackingCode.split("-")[1])
+
+      
+
       await api.post("/admin/shipping-details", {
         "sid": sid
       },
@@ -44,13 +48,17 @@ export default function AdminDashboard({ }: Props) {
             setShippingDetails(res.data.shipment)
             setShippingDetailsOpen(true)
           }
-          console.log(res)
 
+      
+
+        }else {
+          setSearchingResponse("Invalid tracking number or you dont have access")
         }
       })
 
     } catch (err) {
       console.log(err)
+      setSearchingResponse("Invalid tracking number or you dont have access")
     }
 
 
@@ -80,7 +88,7 @@ export default function AdminDashboard({ }: Props) {
 
     ).then((res) => {
       if (res.status === 200) {
-        console.log(res.data)
+       
         setShipments(res.data.shipments)
 
       }
@@ -102,7 +110,7 @@ export default function AdminDashboard({ }: Props) {
         <div className="search-outer">
           <div className="search">
             <input type="text" className="searchTerm" onChange={(e) => { setShipmentSearch(e.target.value) }} placeholder="Enter tracking code to track an order ..." />
-            <button onClick={() => { console.log("test"); findShipment(shipmentSearch) }} type="submit" className="searchButton">
+            <button onClick={() => { findShipment(shipmentSearch) }} type="submit" className="searchButton">
               <SearchIcon />
             </button>
           </div>

@@ -15,7 +15,7 @@ export default function ResponseMessege({message}: Props) {
 
       
 
-    //   close(false)
+
   
       return ()=> {clearTimeout(timer)} ;
     }, []);

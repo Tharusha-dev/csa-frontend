@@ -39,15 +39,15 @@ export default function AdminShipmentCard({ shipment, accessToken }: Props) {
       
 
     async function submitChanges(sid: number, status: string, accessToken: any) {
-
+     
         await api.post("/admin/modify-shipment/", {
             sid: sid,
             status: status
         },
         ).then((res) => {
-            console.log(res)
+        
             if (res.status === 200) {
-                console.log("done")
+               
                 setResponse(res.data.message)
                 setShowResponse(true)
             }
@@ -67,7 +67,7 @@ export default function AdminShipmentCard({ shipment, accessToken }: Props) {
                         <option value="Pending" onChange={() => { }}>Pending</option>
 
                     </select>
-                    <button onClick={() => { submitChanges(shipment.sid, selectedStatusOption, accessToken) }}>
+                    <button  onClick={() => { submitChanges(shipment.sid, selectedStatusOption, accessToken) }}>
                         submit
                     </button>
                 </div>

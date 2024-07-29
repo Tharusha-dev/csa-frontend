@@ -24,7 +24,7 @@ export default function ShipmentDetails({ shipment, closePopUp }: Props) {
     return (
         <div className='shipment-details'>
             <button
-                onClick={() => { closePopUp(false) }}
+                onClick={() => { console.log("test");closePopUp(false) }}
                 style={{
                     position: 'absolute',
                     top: '10px',

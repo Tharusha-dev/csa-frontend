@@ -55,7 +55,7 @@ export default function ProfilePage({ }: Props) {
     try {
       await api.post("/profile-info").then((res) => {
         if (res.status === 200) {
-          console.log(res.data)
+         
           setLoading(false)
           setProfileInfo(res.data.userInfo)
         }

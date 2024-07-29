@@ -99,3 +99,28 @@
     font-size: 20px;
   }
   
+
+  @media only screen and (max-width: 900px) {
+    /* For mobile phones: */
+    .header {
+      flex-direction: column;
+      align-items: start;
+
+    }
+
+    .search-outer {
+      width: 100%;
+    }
+
+    .header-btns {
+      margin-top: 5%;
+      width: 100%;
+      font-size: 1em;
+    }
+
+    .btn {
+      margin-top: 5%;
+      font-size: 1.2em;
+
+    }
+  }

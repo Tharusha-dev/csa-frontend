@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useApi } from '../useApi'
 
 import "../pages/loginPage.css"
@@ -23,6 +23,33 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const api = useApi()
 
+  useEffect(() => {
+
+    async function verifyUser() {
+        await api.post("/verify", {},
+            {
+              
+            }
+
+        ).then((res) => {
+
+
+            if (res.status === 200) {
+                navigate("/dashboard")
+            }
+        }).catch((err) => {
+            if (err.response.status === 403) {
+                navigate("/login")
+            }
+        })
+
+    }
+
+    verifyUser()
+
+
+}, [])
+
   async function submitDetails(email: string, password: string) {
 
 
@@ -37,15 +64,15 @@ export default function LoginPage() {
       if (res.status === 200) {
         let accessToken:string  = res.data.accessToken
         let privilegeLevel:number = res.data.privilegeLevel
-        console.log(privilegeLevel)
+       
         setAuth({accessToken,privilegeLevel})
 
         navigate("/dashboard")
-        console.log(res.data.accessToken)
-        console.log(accessToken)
+        
 
       }
     }).catch((err)=>{
+      console.log(err)
       setResponse(err.response.data)
     })
   }
@@ -73,6 +100,8 @@ export default function LoginPage() {
         }} className="login-submit-button">
           Sign In
         </button>
+
+        <span style={{marginTop:"10%"}} onClick={()=>{navigate("/signup")}}>Dont have a account ? Register here.</span>
       </div>
 
       {response}

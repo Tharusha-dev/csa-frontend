@@ -35,9 +35,9 @@ export default function AdminShipmentDetails({ shipment, closePopUp, accessToken
             status: status
         },
         ).then((res) => {
-            console.log(res)
+           
             if (res.status === 200) {
-                console.log("done")
+                
                 setResponse(res.data.message)
                 setShowResponse(true)
             }

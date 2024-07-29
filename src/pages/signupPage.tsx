@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import bcrypt from 'bcryptjs'
 // import api from '../axios'
 import { useApi } from '../useApi'
@@ -18,6 +18,32 @@ export default function SignupPage() {
     const navigate = useNavigate()
     const api = useApi()
 
+    useEffect(() => {
+
+        async function verifyUser() {
+            await api.post("/verify", {},
+                {
+                  
+                }
+    
+            ).then((res) => {
+    
+    
+                if (res.status === 200) {
+                    navigate("/dashboard")
+                }
+            }).catch((err) => {
+                if (err.response.status === 403) {
+                    navigate("/signup")
+                }
+            })
+    
+        }
+    
+        verifyUser()
+    
+    
+    }, [])
 
 
     async function submitDetails(firstName: string, lastName: string, email: string, password: string, address:string) {
@@ -73,9 +99,11 @@ export default function SignupPage() {
 
                 <button onClick={(e) => {
                     submitDetails(fname, lname, email, password,addrs)
-                }} className="submit-button">
-
+                }} className="signup-submit-button">
+                    Sign Up
                 </button>
+
+                <span style={{marginTop:"10%"}} onClick={()=>{navigate("/login")}}> Already a user ? Log in here. </span>
             </div>
 
             {response != "" ? <span>{response}</span> : ""}

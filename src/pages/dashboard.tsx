@@ -8,7 +8,7 @@ import ShipmentDetails from '../components/shipmentDetails'
 import { Shipment } from '../types/types'
 
 import '../pages/dashboard.css'
-import ResponseMessege from '../components/responseMessege'
+
 import SearchIcon from '../components/searchIcon'
 
 type Props = {}
@@ -30,7 +30,6 @@ export default function Dashboard({ }: Props) {
 
     const [shipmentSearch, setShipmentSearch] = useState("")
 
-    const [searching, setSearching] = useState(false)
 
     const [searchingResponse, setSearchingResponse] = useState("")
     const [shipingDetails, setShippingDetails] = useState<Shipment | null>(null)
@@ -42,7 +41,7 @@ export default function Dashboard({ }: Props) {
     const navigate = useNavigate()
 
     async function getAllShipments() {
-        console.log(accessToken)
+
         await api.get("/all-shipments",
             {
 
@@ -52,7 +51,7 @@ export default function Dashboard({ }: Props) {
             if (res.status === 200) {
 
                 setShipments(res.data.shipments)
-                console.log(accessToken)
+            
                 setResponseGot(true)
             }
         }
@@ -89,7 +88,7 @@ export default function Dashboard({ }: Props) {
                         setShippingDetails(res.data.shipment)
                         setShippingDetailsOpen(true)
                     }
-                    console.log(res)
+                   
 
                 }
 
@@ -98,6 +97,8 @@ export default function Dashboard({ }: Props) {
 
         } catch (err) {
             console.log(err)
+            setSearchingResponse("Invalid tracking number or you dont have access")
+          
         }
 
 
@@ -165,7 +166,7 @@ export default function Dashboard({ }: Props) {
 
 
 
-            {accessToken && isNewShipmentOpen ? <NewShipment accessToken={accessToken} closePopUp={() => [setIsNewShipmentOpen]} /> : <></>}
+            {accessToken && isNewShipmentOpen ? <NewShipment accessToken={accessToken} closePopUp={setIsNewShipmentOpen} /> : <></>}
             {shipingDetails && accessToken && shipingDetailsOpen ? <ShipmentDetails shipment={shipingDetails} closePopUp={setShippingDetailsOpen} /> : <></>}
 
 
