@@ -8,8 +8,11 @@ import { useContext } from 'react';
 
 
 export default function LoginPage() {
-  //@ts-ignore
-const { accessToken, setAccessToken } = useContext(AuthContext)
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('Error with auth provider');  // could have just done const { accessToken, setAuth } = useContext(AuthContext); but typescript keeps thowing errors
+  }
+  const {  setAuth } = context;
 
 
   const [email, setEmail] = useState("")
@@ -29,17 +32,13 @@ const { accessToken, setAccessToken } = useContext(AuthContext)
       "password": password
     },
 
-      {
-        headers: {
-          Authorization: "Bearer " + accessToken?.accessToken
-        }
-      }
+   
     ).then((res) => {
       if (res.status === 200) {
         let accessToken:string  = res.data.accessToken
         let privilegeLevel:number = res.data.privilegeLevel
         console.log(privilegeLevel)
-        setAccessToken({accessToken,privilegeLevel})
+        setAuth({accessToken,privilegeLevel})
 
         navigate("/dashboard")
         console.log(res.data.accessToken)
@@ -71,8 +70,8 @@ const { accessToken, setAccessToken } = useContext(AuthContext)
 
         <button onClick={(e) => {
           submitDetails(email, password)
-        }} className="submit-button">
-
+        }} className="login-submit-button">
+          Sign In
         </button>
       </div>
 

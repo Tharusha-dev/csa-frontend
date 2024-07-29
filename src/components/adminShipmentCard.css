@@ -1,4 +1,4 @@
-.shipment-card {
+.admin-shipment-card {
     background-color: white;
     width: 100%;
     padding: 2%;
@@ -7,16 +7,16 @@
     border-radius: 1em;
 }
 
-.top {
+.admin-top {
     display: flex;
     justify-content: space-between;
 }
 
-.rec-addr {
+.admin-rec-addr {
     color: #858585;
 }
 
-.status {
+.admin-status {
     padding: 1%;
     width: 20%;
     height: min-content;
@@ -28,7 +28,18 @@
     border-radius: 1em;
 }
 
-.detail-title {
+.admin-detail-title {
     font-weight: bold;
 }
 
+
+.admin-bottom {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.admin-addr-sid {
+    display: flex;
+    justify-content: space-between;
+}

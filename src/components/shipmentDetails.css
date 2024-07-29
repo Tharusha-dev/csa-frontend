@@ -1,0 +1,24 @@
+.shipment-details {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+    width: 50%;
+    height: 50%;
+
+}
+
+.shipment-details-container {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 3%;
+    box-sizing: border-box;
+    
+    border-radius: 1em;
+
+}

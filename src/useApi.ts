@@ -1,14 +1,15 @@
-// useApi.ts
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { useContext, useMemo } from 'react';
 import { AuthContext } from './auth/authContext';
 import { useNavigate } from 'react-router-dom';
-import { error } from 'console';
 
-export function useApi() {
-    //@ts-ignore
-  const { accessToken, setAccessToken } = useContext(AuthContext);
-  const navigate = useNavigate()
+export function useApi(): AxiosInstance {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('Error with auth provider');  // could have just done const { accessToken, setAuth } = useContext(AuthContext); but typescript keeps thowing errors
+  }
+  const { accessToken, setAuth } = context;
+  const navigate = useNavigate();
 
   const api = useMemo(() => {
     const instance = axios.create({
@@ -16,29 +17,38 @@ export function useApi() {
       withCredentials: true,
     });
 
-    instance.interceptors.response.use((response) => {
-      if (response.data.accessToken) {
-        let accessToken:string  = response.data.accessToken
-        let privilegeLevel:number = response.data.privilegeLevel
-        setAccessToken({accessToken,privilegeLevel})
-        
-        console.log("new access token set")
+    instance.interceptors.request.use((config) => {
+      if (accessToken || accessToken == null) {
+        console.log("fired")
+        config.headers['Authorization'] = `Bearer ${accessToken}`;
       }
-
-    
-      console.log(response)
-      return response;
+      return config;
     });
 
-    // instance.interceptors.request.use((config) => {
-    //   if (accessToken) {
-    //     config.headers['Authorization'] = `Bearer ${accessToken}`;
-    //   }
-    //   return config;
-    // });
+    instance.interceptors.response.use(
+      (response) => {
+        if (response.data.accessToken) {
+          setAuth({
+            accessToken: response.data.accessToken,
+            privilegeLevel: response.data.privilegeLevel,
+          });
+          console.log("new access token set");
+          console.log(accessToken)
+          console.log(response.data.accessToken)
+        }
+        return response;
+      },
+      (error) => {
+        if (error.response && error.response.status === 401) {
+          // Handle unauthorized access
+          navigate('/login');
+        }
+        return Promise.reject(error);
+      }
+    );
 
     return instance;
-  }, [accessToken, setAccessToken]);
+  }, [accessToken, setAuth, navigate]);
 
   return api;
 }

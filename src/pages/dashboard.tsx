@@ -4,22 +4,38 @@ import { AuthContext } from '../auth/authContext'
 import NewShipment from '../components/newShipment'
 import { useNavigate } from 'react-router-dom'
 import ShipmentCard from '../components/shipmentCard'
+import ShipmentDetails from '../components/shipmentDetails'
+import { Shipment } from '../types/types'
 
 import '../pages/dashboard.css'
+import ResponseMessege from '../components/responseMessege'
+import SearchIcon from '../components/searchIcon'
 
 type Props = {}
 
 export default function Dashboard({ }: Props) {
-    //@ts-ignore
-    const { accessToken, setAccessToken } = useContext(AuthContext)
-    //@ts-ignore
-    const [shipments, setShipments]: any = useState([])
+
+    const context = useContext(AuthContext);
+    if (!context) {
+        throw new Error('Error with auth provider');  // could have just done const { accessToken, setAuth } = useContext(AuthContext); but typescript keeps thowing errors
+    }
+    const { accessToken, privilegeLevel } = context;
+
+    const [shipments, setShipments] = useState<Shipment[]>([])
 
     const [isNewShipmentOpen, setIsNewShipmentOpen] = useState(false)
 
     const [responseGot, setResponseGot] = useState(false)
 
+
     const [shipmentSearch, setShipmentSearch] = useState("")
+
+    const [searching, setSearching] = useState(false)
+
+    const [searchingResponse, setSearchingResponse] = useState("")
+    const [shipingDetails, setShippingDetails] = useState<Shipment | null>(null)
+    const [shipingDetailsOpen, setShippingDetailsOpen] = useState(false)
+
 
 
     const api = useApi()
@@ -29,14 +45,12 @@ export default function Dashboard({ }: Props) {
         console.log(accessToken)
         await api.get("/all-shipments",
             {
-                headers: {
-                    Authorization: "Bearer " + accessToken?.accessToken
-                }
+
             }
 
         ).then((res) => {
             if (res.status === 200) {
-                //@ts-ignore
+
                 setShipments(res.data.shipments)
                 console.log(accessToken)
                 setResponseGot(true)
@@ -54,7 +68,7 @@ export default function Dashboard({ }: Props) {
     async function findShipment(trackingCode: string) {
         const sid = parseInt(trackingCode.split("-")[1])
 
-        console.log(sid)
+
 
 
 
@@ -65,16 +79,21 @@ export default function Dashboard({ }: Props) {
                 "sid": sid
             },
 
-                {
-                    headers: {
-                        Authorization: "Bearer " + accessToken?.accessToken
-                    }
-                }
+
             ).then((res) => {
+
                 if (res.status === 200) {
+                    if (res.data.shipment === null) {
+                        setSearchingResponse("No tracking data avaiable")
+                    } else {
+                        setShippingDetails(res.data.shipment)
+                        setShippingDetailsOpen(true)
+                    }
                     console.log(res)
 
                 }
+
+                setResponseGot(true)
             })
 
         } catch (err) {
@@ -86,12 +105,7 @@ export default function Dashboard({ }: Props) {
 
     }
 
-    async function logOut() {
-        await api.post("/logout")
-        setAccessToken(null)
-        navigate("/login")
 
-    }
 
     useEffect(() => {
         getAllShipments()
@@ -100,20 +114,27 @@ export default function Dashboard({ }: Props) {
     return (
         <div className="dashboard">
             <div className="header">
-              
-                <div className="search">
-                    <input type="text" className="searchTerm" onChange={(e) => { setShipmentSearch(e.target.value) }} placeholder="Enter tracking code to track your order ..." />
-                    <button onClick={() => { console.log("test"); findShipment(shipmentSearch) }} type="submit" className="searchButton">
-                        <i className="fa fa-search"></i>
-                    </button>
+
+                <div className="search-outer">
+                    <div className="search">
+                        <input type="text" className="searchTerm" onChange={(e) => { setShipmentSearch(e.target.value) }} placeholder="Enter tracking code to track your order ..." />
+                        <button onClick={() => { findShipment(shipmentSearch) }} type="submit" className="searchButton">
+                            <SearchIcon />
+
+                        </button>
+                    </div>
+                    {searchingResponse}
                 </div>
+
+
 
                 <div className="header-btns">
                     <button className='btn' onClick={() => {
                         setIsNewShipmentOpen(!isNewShipmentOpen)
                     }}>New Shipment</button>
 
-                    {responseGot && accessToken.privilegeLevel > 0 ? <button className='btn' onClick={() => { navigate("/admin-panel") }}>Admin panel</button> : <></>}
+                    <button className='btn' onClick={() => { navigate("/profile") }}>Edit profile</button>
+                    {responseGot && privilegeLevel && privilegeLevel > 0 ? <button className='btn' onClick={() => { navigate("/admin-panel") }}>Admin panel</button> : <></>}
 
                 </div>
 
@@ -128,9 +149,9 @@ export default function Dashboard({ }: Props) {
             <div className="shipments">
                 {
 
-                    //@ts-ignore
+
                     shipments.length != 0 ?
-                        //@ts-ignore
+
 
                         shipments.map(shipment =>
                             <ShipmentCard shipment={shipment} key={shipment.sid} />
@@ -144,15 +165,11 @@ export default function Dashboard({ }: Props) {
 
 
 
-            {isNewShipmentOpen ? <NewShipment accessToken={accessToken.accessToken} getAllShipment={getAllShipments} closePopUp={setIsNewShipmentOpen} /> : <></>}
+            {accessToken && isNewShipmentOpen ? <NewShipment accessToken={accessToken} closePopUp={() => [setIsNewShipmentOpen]} /> : <></>}
+            {shipingDetails && accessToken && shipingDetailsOpen ? <ShipmentDetails shipment={shipingDetails} closePopUp={setShippingDetailsOpen} /> : <></>}
 
 
 
-            <button className="logout" onClick={() => {
-                logOut()
-            }}>
-                Logout
-            </button>
 
 
 

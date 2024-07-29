@@ -5,11 +5,10 @@ import { useApi } from '../useApi'
 
 type Props = {
     accessToken: string
-    getAllShipment: Function
     closePopUp: Function
 }
 
-export default function NewShipment({ accessToken: accesToken, getAllShipment, closePopUp }: Props) {
+export default function NewShipment({ accessToken: accesToken, closePopUp }: Props) {
 
     const [resName, setResName] = useState("")
     const [resAddr, setResAddr] = useState("")
@@ -20,6 +19,7 @@ export default function NewShipment({ accessToken: accesToken, getAllShipment, c
 
     async function submitDetails(resName: string, resAddr: string) {
         setLoading(true)
+        console.log(accesToken)
 
 
 
@@ -27,11 +27,7 @@ export default function NewShipment({ accessToken: accesToken, getAllShipment, c
 
             "recipient_name": resName,
             "recipient_address": resAddr,
-        }, {
-            headers: {
-                Authorization: "Bearer " + accesToken
-            }
-        }
+        }, 
 
 
 
@@ -39,7 +35,7 @@ export default function NewShipment({ accessToken: accesToken, getAllShipment, c
             setLoading(false)
             if (res.status === 200) {
 
-                setResponse(res.data)
+                setResponse(res.data.message)
                 console.log(res)
 
             }

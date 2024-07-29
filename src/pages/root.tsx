@@ -7,9 +7,7 @@ import { AuthContext } from '../auth/authContext'
 type Props = {}
 
 export default function Root({ }: Props) {
-    //@ts-ignore
-    const { accessToken, setAccessToken } = useContext(AuthContext)
-
+    
 
     const api = useApi()
     const navigate = useNavigate()
@@ -19,10 +17,7 @@ export default function Root({ }: Props) {
         async function verifyUser() {
             await api.post("/verify", {},
                 {
-                    headers: {
-                        Authorization: "Bearer " + accessToken,
-
-                    }
+                  
                 }
 
             ).then((res) => {

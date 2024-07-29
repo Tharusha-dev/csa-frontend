@@ -8,8 +8,7 @@ import LoginPage from './pages/loginPage';
 import Dashboard from './pages/dashboard';
 import Root from './pages/root';
 import AdminDashboard from './pages/adminDashboard';
-import NewShipment from './components/newShipment';
-
+import ProfilePage from './pages/profilePage';
 
 import { AuthProvider } from './auth/authContext';
 
@@ -39,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard />
+  },
+  {
+    path: "/profile",
+    element: <ProfilePage />
   },
 
 ]);

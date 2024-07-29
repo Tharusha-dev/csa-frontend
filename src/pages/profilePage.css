@@ -1,0 +1,40 @@
+.profile-info {
+    background-color: white;
+    margin: 5% 5% 0 5%;
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content:  start;
+}
+
+.profile-detail-title {
+    font-size: 2em;
+    font-weight: bold;
+    margin-top: 15%;
+}
+
+.profile-detail-input {
+    font-size: 1.5em;
+    padding: 3%;
+}
+
+.response {
+    padding-top: 10%;
+    color: gray;
+}
+
+.logout-btn {
+    margin-top: 15%;
+    font-size: 1.3em;
+    border: none;
+    padding: 4%;
+    box-sizing: border-box;
+    border-radius: 0.5em;
+    transition: backgroud-color 1s;
+
+}
+
+.logout-btn:hover {
+    background-color: grey;
+}
